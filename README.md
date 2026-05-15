@@ -17,7 +17,21 @@ docker volume create timescaledb_data
 ```
 3. Start services:
 ```bash
+cd ./backend
 docker compose up
+cd ./frontend
+docker compose up
+```
+
+4. Stopping services:
+```bash
+cd ./backend
+docker compose down
+cd ./frontend
+docker compose down
+
+# Optional - delete database volume
+docker volume rm timescaledb_data
 ```
 
 ## Contributing

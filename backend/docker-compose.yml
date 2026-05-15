@@ -1,6 +1,5 @@
 services:
 
-
   # DATABASE
   # Define the database called "timescaledb". 
   # The `db-data` volume persists the database data between container restarts.
@@ -19,13 +18,15 @@ services:
       # persistent database storage
       - timescaledb_data:/var/lib/postgresql/data
       # startup SQL scripts
-      - ./initdb:/docker-entrypoint-initdb.d
+      - ./database/initdb:/docker-entrypoint-initdb.d
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d puregym_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend-net
 
   # APICLIENT
   # Define webscraping service called "apiclient".
@@ -34,19 +35,42 @@ services:
     depends_on:
       timescaledb:
         condition: service_healthy
-    image: chrisjackr/puregym-api-client:latest
-    # build:
-    #   context: ../puregym-api-client
+    # image: chrisjackr/puregym-api-client:latest
+    build:
+      context: ./puregym-api-client
+    container_name: puregym-api-client
     env_file:
       - ../.env
-    container_name: puregym-api-client
     restart: unless-stopped
+    networks:
+      - backend-net
+
+  # API SERVER
+  # This container serves the FastAPI
+  puregym-api-server:
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    image: chrisjackr/puregym-api-server:latest
+    build:
+      context: ./fastapi
+    container_name: puregym-api-server
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env
+    restart: unless-stopped
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
 
 # Can remove volume with `docker compose down -v`
 # volumes:
 #   timescaledb_data:
 
-# Must remove volume with `docker volume rm timescaledb_data`
+#Must remove volume with `docker volume rm timescaledb_data`
 volumes:
   timescaledb_data:
     external: true
