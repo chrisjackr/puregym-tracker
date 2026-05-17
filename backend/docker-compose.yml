@@ -20,13 +20,13 @@ services:
       # startup SQL scripts
       - ./database/initdb:/docker-entrypoint-initdb.d
     restart: unless-stopped
+    networks:
+      - backend-net
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d puregym_db"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - backend-net
 
   # PUREGYM API CLIENT
   # Service which calls the PureGym API to get and store attedance data.
@@ -61,6 +61,7 @@ services:
     restart: unless-stopped
     networks:
       - backend-net
+
 
 networks:
   backend-net:

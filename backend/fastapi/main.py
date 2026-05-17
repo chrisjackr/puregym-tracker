@@ -77,6 +77,20 @@ app.add_middleware(
 async def favicon():
     return FileResponse("./favicon.ico")
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/health/ready")
+async def ready():
+    """Check if FastAPI is ready."""
+    conn = get_db()
+    try:
+        query_current_gym_attendance(conn)
+        return {"status": "ready"}
+    except Exception:
+        return {"status": "not-ready"}
+
 @app.get("/attendance", response_model=GymAttedance)
 def get_current_gym_attendance():
     """Get current gym attendance."""
