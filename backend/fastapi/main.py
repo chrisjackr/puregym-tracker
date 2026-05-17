@@ -23,7 +23,7 @@ app = FastAPI()
 
 ORIGINS = [
     "http://localhost:5173",
-    os.getenv("API_HOST_ORIGIN"),
+    f"http://{os.getenv("VITE_API_HOST_ORIGIN")}:5173",
 ]
 
 load_dotenv()  # loads .env from project root

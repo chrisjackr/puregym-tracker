@@ -28,14 +28,13 @@ services:
     networks:
       - backend-net
 
-  # APICLIENT
-  # Define webscraping service called "apiclient".
-  # This service is built from the Dockerfile-APIClient in the current directory.
+  # PUREGYM API CLIENT
+  # Service which calls the PureGym API to get and store attedance data.
   puregym-api-client:
     depends_on:
       timescaledb:
         condition: service_healthy
-    # image: chrisjackr/puregym-api-client:latest
+    image: chrisjackr/puregym-api-client:latest
     build:
       context: ./puregym-api-client
     container_name: puregym-api-client
@@ -46,7 +45,7 @@ services:
       - backend-net
 
   # API SERVER
-  # This container serves the FastAPI
+  # This container serves the FastAPI to query and return data from the database.
   puregym-api-server:
     depends_on:
       timescaledb:
