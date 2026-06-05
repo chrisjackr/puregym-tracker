@@ -23,7 +23,7 @@ app = FastAPI()
 
 ORIGINS = [
     "http://localhost:5173",
-    os.getenv("API_HOST_ORIGIN"),
+    f"http://{os.getenv("VITE_FRONTEND_HOST_ORIGIN")}:5173",
 ]
 
 load_dotenv()  # loads .env from project root
@@ -76,6 +76,20 @@ app.add_middleware(
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return FileResponse("./favicon.ico")
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/health/ready")
+async def ready():
+    """Check if FastAPI is ready."""
+    conn = get_db()
+    try:
+        query_current_gym_attendance(conn)
+        return {"status": "ready"}
+    except Exception:
+        return {"status": "not-ready"}
 
 @app.get("/attendance", response_model=GymAttedance)
 def get_current_gym_attendance():

@@ -8,12 +8,10 @@ services:
     image: timescale/timescaledb:latest-pg17
     container_name: timescaledb
     ports:
-      # HOST_IP:HOST_PORT:CONTAINER_PORT
-      # Container port is mapped to host port, listening on host ip
+      - "127.0.0.1:5432:5432" # Only expose Postgres to localhost
       # - "0.0.0.0:5432:5432" # Expose container port 5432 to your HOST machine 
-      - "127.0.0.1:15432:5432" # Only expose Postgres to localhost
-    # expose:
-    #   - NO PORT EXPOSED: 15432 is only for database access locally, not for other containers
+    expose:
+      - 5432
     env_file:
       - ../.env
     volumes:
@@ -36,9 +34,10 @@ services:
     depends_on:
       timescaledb:
         condition: service_healthy
-    image: chrisjackr/puregym-api-client:latest
+    image: chrisjackr/puregym-api-client:rpi-latest
     build:
       context: ./puregym-api-client
+      dockerfile: rpi.Dockerfile
     container_name: puregym-api-client
     env_file:
       - ../.env
@@ -52,9 +51,10 @@ services:
     depends_on:
       timescaledb:
         condition: service_healthy
-    image: chrisjackr/puregym-api-server:latest
+    image: chrisjackr/puregym-api-server:rpi-latest
     build:
       context: ./fastapi
+      dockerfile: rpi.Dockerfile
     container_name: puregym-api-server
     ports:
       - "8000:8000"
@@ -63,7 +63,6 @@ services:
     restart: unless-stopped
     networks:
       - backend-net
-
 
 networks:
   backend-net:
