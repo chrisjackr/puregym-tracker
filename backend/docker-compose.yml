@@ -8,10 +8,10 @@ services:
     image: timescale/timescaledb:latest-pg17
     container_name: timescaledb
     ports:
-      - "127.0.0.1:5432:5432" # Only expose Postgres to localhost
+      - "127.0.0.1:15432:5432" # Only expose Postgres to localhost
       # - "0.0.0.0:5432:5432" # Expose container port 5432 to your HOST machine 
     expose:
-      - 5432
+      - 15432
     env_file:
       - ../.env
     volumes:
