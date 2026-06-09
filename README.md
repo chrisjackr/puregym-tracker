@@ -28,7 +28,7 @@ docker compose up
 cd ./backend
 docker compose down
 cd ./frontend
-docker compose down
+docker compose down -v #removes attached node_modules volume
 
 # Optional - delete database volume
 docker volume rm timescaledb_data
