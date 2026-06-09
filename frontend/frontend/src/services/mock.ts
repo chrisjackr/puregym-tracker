@@ -7,7 +7,7 @@ export const USE_MOCK = true;
 const mockGyms: Gym[] = [  
   {
     Id: 1,
-    Name: "PureGym Exeter Forestreet",
+    Name: "PureGym Exeter",
     Status: "Open",
     Location: {
       GeoLocation: { Latitude: 50.721, Longitude: -3.534 },
