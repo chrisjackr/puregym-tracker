@@ -2,9 +2,9 @@ import type { AttendancePoint, Gym, Member } from "@/types/api";
 import api from "./api";
 
 /** Flip to false when the self-hosted API is reachable. */
-export const USE_MOCK = true;
+export const USE_MOCK = false;
 
-const mockGyms: Gym[] = [  
+const mockGyms: Gym[] = [
   {
     Id: 1,
     Name: "PureGym Exeter",
