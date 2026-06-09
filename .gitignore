@@ -1,6 +1,7 @@
 # project
 scripts/
 ignore/
+frontend/frontend-old/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

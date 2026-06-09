@@ -4,16 +4,16 @@ import api from "./api";
 /** Flip to false when the self-hosted API is reachable. */
 export const USE_MOCK = true;
 
-const mockGyms: Gym[] = [
+const mockGyms: Gym[] = [  
   {
     Id: 1,
-    Name: "PureGym London Bridge",
+    Name: "PureGym Exeter Forestreet",
     Status: "Open",
     Location: {
-      GeoLocation: { Latitude: 51.5045, Longitude: -0.0865 },
-      Address: { Town: "London", Postcode: "SE1 9SG", Country: "United Kingdom" },
+      GeoLocation: { Latitude: 50.721, Longitude: -3.534 },
+      Address: { Town: "Exeter", Postcode: "EX4 3AH", Country: "United Kingdom" },
     },
-    ContactInfo: { PhoneNumber: "+44 20 7946 0001" },
+    ContactInfo: { PhoneNumber: "+44 20 7946 0000" },
     TimeZone: "Europe/London",
   },
   {
