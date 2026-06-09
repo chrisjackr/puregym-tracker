@@ -74,6 +74,9 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# Loveable
+*.lovable/
+
 # Sphinx documentation
 docs/_build/
 
