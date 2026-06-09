@@ -2,10 +2,11 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from fastapi.responses import FileResponse
-from .queries import get_db, query_current_gym_attendance_now, query_current_gym_attendance
-from .models import GymAttedance, Gym, Member
+from queries import get_db, query_gym_attendance
+from models import GymAttedance, Gym, Member
 
 # PureGym Client
 # from puregym_attendance import PuregymAPIClient
@@ -73,8 +74,9 @@ def health():
 async def ready():
     """Check if FastAPI is ready."""
     conn = get_db()
+    date = "2026-06-09 12:00:00"
     try:
-        query_current_gym_attendance(conn)
+        query_gym_attendance(conn, gym_id=208, start=date, end=date)
         return {"status": "ready"}
     except Exception:
         return {"status": "not-ready"}
@@ -91,8 +93,8 @@ def get_gyms():
     return [Gym(**gym) for gym in gym_info]
 
 @app.get("/member", response_model=Member)
-def get_gyms():
-    """Get list of gyms."""
+def get_member():
+    """Get member info."""
 
     client = PuregymAPIClient(
         email=os.getenv('email'),
@@ -101,14 +103,16 @@ def get_gyms():
     member_info = client.get_member()
     return Member(**member_info)
 
-@app.get("/attendance/now", response_model=GymAttedance)
-def get_current_gym_attendance():
+@app.get("/attendance/{gym_id}/now", response_model=GymAttedance)
+def get_current_gym_attendance(gym_id: int):
     """Get current gym attendance."""
 
     conn = get_db()
-
+    now = datetime.now()
+    start = now - timedelta(minutes=1)
+    end = now
     try:
-        result = query_current_gym_attendance_now(conn)
+        result = query_gym_attendance(conn, gym_id, start, end)
 
         if result is None:
             return None
@@ -118,14 +122,14 @@ def get_current_gym_attendance():
     finally:
         conn.close()
 
-@app.get("/attendance", response_model=GymAttedance)
-def get_current_gym_attendance(start: str, end: str):
+@app.get("/attendance/{gym_id}", response_model=GymAttedance)
+def get_gym_attendance(gym_id: int, start: str, end: str):
     """Get current gym attendance."""
 
     conn = get_db()
 
     try:
-        result = query_current_gym_attendance(conn, start, end)
+        result = query_gym_attendance(conn, gym_id, start, end)
 
         if result is None:
             return None

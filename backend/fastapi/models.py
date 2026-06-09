@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 class GymAttedancePoint(BaseModel):
-    time: str
+    time: datetime
     gym_attendance: int
 
 class GymAttedance(BaseModel):
@@ -53,7 +53,7 @@ class OpeningHours(BaseModel):
 
 
 class GymAccess(BaseModel):
-    AccessOptions: Optional[AccessOptions] = None
+    GymAccessOptions: Optional[AccessOptions] = None
     OpeningHours: OpeningHours
     StandardOpeningTimes: list[OpeningHour]
     ReopenDate: str
