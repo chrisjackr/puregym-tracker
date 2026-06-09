@@ -6,7 +6,7 @@ export const USE_MOCK = true;
 
 const mockGyms: Gym[] = [
   {
-    Id: 1,
+    Id: 12,
     Name: "PureGym London Bridge",
     Status: "Open",
     Location: {
@@ -14,6 +14,17 @@ const mockGyms: Gym[] = [
       Address: { Town: "London", Postcode: "SE1 9SG", Country: "United Kingdom" },
     },
     ContactInfo: { PhoneNumber: "+44 20 7946 0001" },
+    TimeZone: "Europe/London",
+  },
+  {
+    Id: 1,
+    Name: "PureGym Exeter Forestreet",
+    Status: "Open",
+    Location: {
+      GeoLocation: { Latitude: 50.721, Longitude: -3.534 },
+      Address: { Town: "Exeter", Postcode: "EX4 3AH", Country: "United Kingdom" },
+    },
+    ContactInfo: { PhoneNumber: "+44 20 7946 0000" },
     TimeZone: "Europe/London",
   },
   {
