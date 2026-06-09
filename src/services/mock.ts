@@ -193,13 +193,31 @@ export async function fetchGyms(): Promise<Gym[]> {
   return data;
 }
 
+/** Format a Date as YYYY-MM-DD_HH:MM:SS (local time). */
+function formatApiDateTime(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return `${date}_${time}`;
+}
+
+interface GymAttendance {
+  GymId: number;
+  Points: AttendancePoint[];
+}
+
 export async function fetchAttendance(
   gymId: number,
   dateISO: string,
 ): Promise<AttendancePoint[]> {
   if (USE_MOCK) return delay(generateAttendance(gymId, dateISO), 250);
-  const { data } = await api.get<AttendancePoint[]>("/attendance", {
-    params: { start: dateISO, end: dateISO, gymId },
+  const dayStart = new Date(dateISO + "T00:00:00");
+  const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000 - 1000);
+  const { data } = await api.get<GymAttendance>(`/attendance/${gymId}`, {
+    params: {
+      start: formatApiDateTime(dayStart),
+      end: formatApiDateTime(dayEnd),
+    },
   });
-  return data;
+  return data.Points;
 }
